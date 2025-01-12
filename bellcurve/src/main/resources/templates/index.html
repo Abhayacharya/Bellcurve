@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Bell Curve</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <canvas id="bellCurveChart"></canvas>
+    <script>
+        fetch('/employees')
+            .then(response => response.json())
+            .then(data => {
+                const ratings = data.map(employee => employee.rating);
+                const labels = ['A', 'B', 'C', 'D', 'E'];
+                const counts = [0, 0, 0, 0, 0];
+
+                ratings.forEach(rating => {
+                    const index = labels.indexOf(rating);
+                    if (index !== -1) counts[index]++;
+                });
+
+                new Chart(document.getElementById('bellCurveChart'), {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Employee Ratings',
+                            data: counts,
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            });
+    </script>
+</body>
+</html>
